@@ -8,16 +8,28 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class MyAdapter(
-    private val data: List<Molecule>
+    private val data: List<Molecule>,
+    private val listener: RecyclerViewEvent
 ) : RecyclerView.Adapter<MyAdapter.ItemViewHolder>() {
 
     //Setup variables to hold the instance of the views defined in your recyclerView item layout
     //Kinda like the onCreate method in an Activity
-    inner class ItemViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    inner class ItemViewHolder(view: View): RecyclerView.ViewHolder(view), View.OnClickListener {
         val name: TextView = view.findViewById(R.id.fullName)
         val threeAbbr: TextView = view.findViewById(R.id.threeAbbr)
         val oneAbbr: TextView = view.findViewById(R.id.oneAbbr)
         val structure: ImageView = view.findViewById(R.id.structure)
+
+        init {
+            view.setOnClickListener(this)
+        }
+
+        override fun onClick(p0: View?) {
+            val position = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                listener.onItemClick(position)
+            }
+        }
     }
 
     //This is where you inflate the layout (Give each entry/row its look)
@@ -41,5 +53,9 @@ class MyAdapter(
     //The recyclerView just wants to know how many items are currently in your dataset
     override fun getItemCount(): Int {
         return data.size
+    }
+
+    interface RecyclerViewEvent{
+        fun onItemClick(position: Int)
     }
 }

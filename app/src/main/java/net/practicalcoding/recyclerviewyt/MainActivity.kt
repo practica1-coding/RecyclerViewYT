@@ -2,17 +2,30 @@ package net.practicalcoding.recyclerviewyt
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MyAdapter.RecyclerViewEvent {
+    private val data = createData()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val recyclerView: RecyclerView = findViewById(R.id.theBestRecyclerViewOnThePlanet)
-        recyclerView.adapter = MyAdapter(createData())
+        recyclerView.adapter = MyAdapter(data, this)
         recyclerView.layoutManager = LinearLayoutManager(this)
+    }
+
+    override fun onItemClick(position: Int) {
+        val molecule = data[position]
+
+        Toast.makeText(
+            this,
+            molecule.name,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     /**
